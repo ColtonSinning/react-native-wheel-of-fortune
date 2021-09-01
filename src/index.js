@@ -113,7 +113,7 @@ class WheelOfFortune extends Component {
     return arcs.map((arc, index) => {
       const instance = d3Shape
         .arc()
-        .padAngle(0.01)
+//         .padAngle(0.01)
         .outerRadius(width / 2)
         .innerRadius(this.props.options.innerRadius || 100);
       return {
