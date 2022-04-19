@@ -38,7 +38,9 @@ class WheelOfFortune extends Component {
     this.RewardCount = this.Rewards.length;
 
     this.numberOfSegments = this.RewardCount;
-    this.fontSize = 20;
+    this.fontSize = this.props.options.fontSize|| 20;
+    this.fontWeight = this.props.options.fontWeight || 'normal';
+    this.fontFamily = this.props.options.fontFamily || 'Montserrat-Bold';
     this.oneTurn = 360;
     this.angleBySegment = this.oneTurn / this.numberOfSegments;
     this.angleOffset = this.angleBySegment / 2;
@@ -114,7 +116,7 @@ class WheelOfFortune extends Component {
       const instance = d3Shape
         .arc()
 //         .padAngle(0.01)
-        .outerRadius(width / 2)
+        .outerRadius(this.props.options.outerRadius || width / 2)
         .innerRadius(this.props.options.innerRadius || 100);
       return {
         path: instance(arc),
@@ -169,7 +171,9 @@ class WheelOfFortune extends Component {
         this.props.options.textColor ? this.props.options.textColor : '#fff'
       }
       textAnchor="middle"
-      fontSize={this.fontSize}>
+      fontSize={this.fontSize}
+      fontWeight={this.fontWeight}
+      fontFamily={this.fontFamily}>
       {Array.from({length: number.length}).map((_, j) => {
         // Render reward text vertically
         if (this.props.options.textAngle === 'vertical') {
@@ -183,7 +187,7 @@ class WheelOfFortune extends Component {
         else {
           return (
             <TSpan
-              y={y - 40}
+              y={y}
               dx={this.fontSize * 0.07}
               key={`arc-${i}-slice-${j}`}>
               {number.charAt(j)}
@@ -217,9 +221,9 @@ class WheelOfFortune extends Component {
             backgroundColor: this.props.options.backgroundColor
               ? this.props.options.backgroundColor
               : '#fff',
-            width: width - 20,
-            height: width - 20,
-            borderRadius: (width - 20) / 2,
+            width: this.props.options.outerRadius * 2 - 20 || width - 20,
+            height: this.props.options.outerRadius * 2 - 20 || width - 20,
+            borderRadius: this.props.options.outerRadius || (width - 20) / 2,
             borderWidth: this.props.options.borderWidth
               ? this.props.options.borderWidth
               : 2,
