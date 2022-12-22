@@ -187,7 +187,7 @@ class WheelOfFortune extends Component {
         else {
           return (
             <TSpan
-              y={y}
+              y={y - 20}
               dx={this.fontSize * 0.07}
               key={`arc-${i}-slice-${j}`}>
               {number.charAt(j)}
