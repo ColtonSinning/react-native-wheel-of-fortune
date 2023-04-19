@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import * as d3Shape from 'd3-shape';
 
-import Svg, {G, Text, TSpan, Path, Pattern} from 'react-native-svg';
+import Svg, {G, Text, TSpan, Path, ClipPath, Defs, Image as SVGImage} from 'react-native-svg';
 
 const AnimatedSvg = Animated.createAnimatedComponent(Svg);
 
@@ -112,6 +112,20 @@ class WheelOfFortune extends Component {
           '#E23B80',
           '#D82B2B',
         ];
+    var images = this.props.options.images
+      ? this.props.options.images
+      : [
+          'https://picsum.photos/200?1',
+          'https://picsum.photos/200?2',
+          'https://picsum.photos/200?3',
+          'https://picsum.photos/200?4',
+          'https://picsum.photos/200?5',
+          'https://picsum.photos/200?6',
+          'https://picsum.photos/200?7',
+          'https://picsum.photos/200?8',
+          'https://picsum.photos/200?9',
+          'https://picsum.photos/200?10',
+        ]
     return arcs.map((arc, index) => {
       const instance = d3Shape
         .arc()
@@ -121,6 +135,7 @@ class WheelOfFortune extends Component {
       return {
         path: instance(arc),
         color: colors[index % colors.length],
+        image: images[index % images.length],
         value: this.Rewards[index],
         centroid: instance.centroid(arc),
       };
@@ -245,6 +260,41 @@ class WheelOfFortune extends Component {
                 const [x, y] = arc.centroid;
                 const number = arc.value.toString();
 
+                const radius = width / 2
+                const curAngle = (i * this.oneTurn) / this.numberOfSegments
+                const radAngle = -Math.PI - Math.PI / 180 * curAngle
+                const offAngle = -Math.PI - Math.PI / 180 * (curAngle + this.angleOffset * 2)
+                const imageX = Math.min(0, Math.sin(radAngle) * radius, Math.sin(offAngle) * radius)
+                const imageY = Math.min(0, Math.cos(radAngle) * radius, Math.cos(offAngle) * radius)
+
+                if (this.props.options.isImage) {
+                  return (
+                    <G key={`arc-${i}`}>
+                      <Defs>
+                        <ClipPath id={`arc${i}`}>
+                          <Path d={arc.path} strokeWidth={2} fill={arc.color} />
+                        </ClipPath>
+                      </Defs>
+                      <Path d={arc.path} strokeWidth={2} fill={arc.color} />
+                      <G clipPath={`url(#arc${i})`}>
+                        <SVGImage
+                          x={imageX}
+                          y={imageY}
+                          width={radius}
+                          height={radius}
+                          xlinkHref={arc.image} />
+                      </G>
+                      <G
+                        rotation={
+                          (i * this.oneTurn) / this.numberOfSegments +
+                          this.angleOffset
+                        }
+                        origin={`${x}, ${y}`}>
+                        {this._textRender(x, y, number, i)}
+                      </G>
+                    </G>
+                  )
+                }
                 return (
                   <G key={`arc-${i}`}>
                     <Path d={arc.path} strokeWidth={2} fill={arc.color} />
