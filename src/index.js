@@ -178,6 +178,13 @@ class WheelOfFortune extends Component {
     });
   };
 
+  _spin = () => {
+    if (this.props.spin) {
+      return this.props.spin();
+    }
+    return null;
+  };
+
   _textRender = (x, y, number, i) => (
     <Text
       x={x - number.length * 5}
@@ -396,7 +403,9 @@ class WheelOfFortune extends Component {
             height: height / 2,
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={this._spin}
+        >
           <Animated.View style={[styles.content, {padding: 10}]}>
             {this._renderSvgWheel()}
           </Animated.View>
