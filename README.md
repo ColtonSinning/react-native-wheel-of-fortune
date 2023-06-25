@@ -48,6 +48,11 @@ textAngle | `String` | horizontal | Set angle of reward text
 
 ## Usage
 ```js
+
+const spin = () => {
+  console.log('This is the action when tapping the whole spin wheel')
+};
+
 const participants = [
   '%10',
   '%20',
@@ -76,6 +81,7 @@ const wheelOptions = {
     };
 <WheelOfFortune
     options={wheelOptions}
+    spin={this.spin}
 />
 <Button title="Press me" onPress={ () => { this.child._onPress() } } />
 ```
