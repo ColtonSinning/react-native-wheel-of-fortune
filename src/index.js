@@ -405,6 +405,7 @@ class WheelOfFortune extends Component {
             alignItems: 'center',
           }}
           onPress={this._spin}
+          disabled={this.props.spinDisabled}
         >
           <Animated.View style={[styles.content, {padding: 10}]}>
             {this._renderSvgWheel()}
